@@ -4,13 +4,11 @@ For simplicity, let's do a single game with 2 people, but later scale to allow f
 """
 
 import random as random
-from sqlalchemy import create_engine
 import pandas as pd
 import datetime
 import psycopg2
 import csv
 from io import StringIO
-import pdb
 
 
 def psql_insert_copy(table_schema, table_name, conn, keys, data_iter):
@@ -118,7 +116,6 @@ def insert_results(game_result_dict, db_url, n_players, n_games):
     )
 
     df_export = pd.DataFrame.from_dict(data_export)
-    # pdb.set_trace()
     with psycopg2.connect(database=db_url) as conn:
         with conn.cursor() as cur:
             print('creating schema if not exists')

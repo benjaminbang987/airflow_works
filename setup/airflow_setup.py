@@ -16,13 +16,13 @@ from airflow import models as af_models
 from tasks import game_1 as g1
 
 
-START_DATE = datetime.datetime(2019, 4, 5, 10, 0, 0)
+START_DATE = datetime(2019, 4, 5, 10, 0, 0)
 SCHEDULE_INTERVAL = "0 10 * * *"
 
 dag_game_1 = af_models.DAG(
     dag_id="rock_paper_scissors",
     default_args={"notification_handlers": None,
-                  "execution_timeout": datetime.timedelta(hours=2),
+                  "execution_timeout": timedelta(hours=2),
                   "retries": 1},
     start_date=START_DATE,
     schedule_interval=SCHEDULE_INTERVAL,
