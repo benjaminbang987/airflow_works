@@ -36,3 +36,4 @@
 ehthumbs.db
 Thumbs.db
 .idea
+tasks/__pycache__/
