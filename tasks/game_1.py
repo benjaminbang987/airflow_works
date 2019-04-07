@@ -4,18 +4,45 @@ For simplicity, let's do a single game with 2 people, but later scale to allow f
 """
 
 import random as random
+from sqlalchemy import create_engine
+import pandas as pd
+import datetime
+import psycopg2
+import csv
+from io import StringIO
+import pdb
+
+
+def psql_insert_copy(table_schema, table_name, conn, keys, data_iter):
+    # gets a DBAPI connection that can provide a cursor
+    # example from https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html#io-sql-method
+    with conn.cursor() as cur:
+        s_buf = StringIO()
+        writer = csv.writer(s_buf)
+        writer.writerows(data_iter)
+        s_buf.seek(0)
+
+        columns = ', '.join('"{}"'.format(k) for k in keys)
+        if table_schema:
+            _table_name = '{}.{}'.format(table_schema, table_name)
+        else:
+            _table_name = table_name
+
+        sql = 'COPY {} ({}) FROM STDIN WITH CSV'.format(
+            _table_name, columns)
+        cur.copy_expert(sql=sql, file=s_buf)
 
 
 CHOICE_LIST = ["r", "p", "s"]
 
 
-def rock_paper_scissors(n_players=2, n_rounds=1):
+def rock_paper_scissors(n_players=2, n_games=1):
     """
     Function to run the rock_paper_scissors game. Returns the dictionary of the results
     """
     try:
         win_dict = dict(zip(range(0, n_players), [0] * n_players))
-        for round in range(1, n_rounds+1):
+        for round in range(1, n_games+1):
             # first round
             print("Round %s" % round)
             verdict = play_round(n_players)  # list of 1/0 for win/loss
@@ -61,3 +88,55 @@ def round_verdict(game_choice_result_list):
         return verdict
     else:
         return []
+
+
+def insert_results(game_result_dict, db_url, n_players, n_games):
+    """
+    Function to insert the game_result_dict into the database
+    """
+
+    query_create_schema = 'create schema if not exists sandbox;'
+    query_create_table = 'create table if not exists sandbox.game_1_results (' \
+                         'player_num  int,' \
+                         'win_count int,' \
+                         'n_players int,' \
+                         'n_games int,' \
+                         'timestamp timestamp' \
+                         ');'
+
+    player_num = game_result_dict.keys()
+    win_count = [game_result_dict[x] for x in player_num]
+    n_players_list = [n_players] * len(win_count)
+    n_games_list = [n_games] * len(win_count)
+
+    data_export = dict(
+        player_num=list(player_num),
+        win_count=win_count,
+        n_players=n_players_list,
+        n_games=n_games_list,
+        timestamp=datetime.datetime.now()
+    )
+
+    df_export = pd.DataFrame.from_dict(data_export)
+    # pdb.set_trace()
+    with psycopg2.connect(database=db_url) as conn:
+        with conn.cursor() as cur:
+            print('creating schema if not exists')
+            cur.execute(query_create_schema)
+            print('creating table if not exists')
+            cur.execute(query_create_table)
+        print('inserting game results to the table')
+        psql_insert_copy(table_name='game_1_results',
+                         table_schema='sandbox',
+                         conn=conn,
+                         keys=df_export.keys(),
+                         data_iter=df_export.values)
+
+
+def game_1_main(database_url, n_players=2, n_games=1):
+    """
+    Main function that plays the game and stores the results in the specified postgresql database
+    """
+    win_dict = rock_paper_scissors(n_players, n_games)
+    insert_results(win_dict, database_url, n_players, n_games)
+
