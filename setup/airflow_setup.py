@@ -13,6 +13,7 @@ from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
 from airflow import models as af_models
 import os
+import subprocess
 from tasks import game_1 as g1
 
 
@@ -45,10 +46,16 @@ t4 = PythonOperator(
     dag=dag_game_1)
 
 
+def checks_airflow_home_dir(manual_dir):
+    if manual_dir:
+    else:
+        home_dir = subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
+
+
 def symbolic_link(src_path, trg_path):
     if not os.path.exists(src_path):
         raise ValueError('Source path {src_path} does not exist'.format(src_path=src_path))
-    if not os.path.exists(trg_path):
+    if not os.path.exists(os.path.dirname(trg_path)):
         raise ValueError('Target path {trg_path} does not exist'.format(trg_path=trg_path))
     try:
         os.symlink(src=src_path, dst=trg_path)
@@ -58,5 +65,8 @@ def symbolic_link(src_path, trg_path):
 
 
 if __name__ == "__main__":
-    symbolic_link("/Users/benjaminbang/dev/ben_prv/airflow_works/setup/airflow_setup.py", "/Users/benjaminbang/airflow/dags")
-    symbolic_link("/Users/benjaminbang/dev/ben_prv/airflow_works/setup/tasks/", "/Users/benjaminbang/airflow/dags")
+    import pdb; pdb.set_trace()
+
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow_setup.py",  + "/airflow_setup.py")
+
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/tasks/", "/Users/benjaminbang/airflow/dags/tasks")
