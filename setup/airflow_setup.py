@@ -12,6 +12,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
 from airflow import models as af_models
+import logging
 import os
 import subprocess
 from tasks import game_1 as g1
@@ -46,13 +47,30 @@ t4 = PythonOperator(
     dag=dag_game_1)
 
 
-def checks_airflow_home_dir(manual_dir):
-    if manual_dir:
+def checks_airflow_home_dir():
+    """
+    Assumed default directory ($AIRFLOW_HOME) is used.
+    If this is not existent, then function names AIRFLOW_HOME representing `~/airflow` directory for the user.
+    """
+    import pdb; pdb.set_trace()
+    if subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True
+                        ).stdout.read().decode("utf-8").strip('\n'):
+        af_home_dir = subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True
+                                        ).stdout.read().decode("utf-8").strip('\n')
+    elif os.path.exists(os.path.expanduser('~/airflow')):
+        subprocess.run('export AIRFLOW_HOME=~/airflow')
+        af_home_dir = os.path.expanduser('~/airflow')
     else:
-        home_dir = subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True).stdout.read().decode("utf-8").strip('\n')
+        logging.info("Creating an airflow folder in ~/ repository.")
+        os.mkdir(os.path.expanduser('~/airflow'))
+        af_home_dir = os.path.expanduser('~/airflow')
+    return af_home_dir
 
 
 def symbolic_link(src_path, trg_path):
+    """
+    Sets up a symbolic link between this DAG + any dependencies and the local directory for Airflow DAGs
+    """
     if not os.path.exists(src_path):
         raise ValueError('Source path {src_path} does not exist'.format(src_path=src_path))
     if not os.path.exists(os.path.dirname(trg_path)):
@@ -60,13 +78,10 @@ def symbolic_link(src_path, trg_path):
     try:
         os.symlink(src=src_path, dst=trg_path)
     except FileExistsError:
-        print("DAG in {dag} is already connected to {trg_path}".format(dag=src_path,
-                                                                       trg_path=trg_path))
+        logging.info("DAG in %s is already connected to %s", src_path, trg_path)
 
 
 if __name__ == "__main__":
-    import pdb; pdb.set_trace()
-
-    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow_setup.py",  + "/airflow_setup.py")
-
-    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/tasks/", "/Users/benjaminbang/airflow/dags/tasks")
+    home_dir = checks_airflow_home_dir()
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow_setup.py", home_dir + "/dags/airflow_setup.py")
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/tasks/", home_dir + "/dags/tasks")
