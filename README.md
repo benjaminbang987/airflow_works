@@ -5,7 +5,6 @@
 
 #### Packages
 
-Python
 To peg the pyenv and python setup, please create/activate a virtual environment for this repo as directed below:
 ```
 pyenv virtualenv 3.6.2 airflow_works
