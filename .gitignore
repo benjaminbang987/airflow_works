@@ -39,3 +39,4 @@ Thumbs.db
 tasks/__pycache__/
 setup/__pycache__/
 __pycache__/
+*.cache/
