@@ -3,6 +3,7 @@ Setting up the simulation for running the 'Rock, Paper Scissors' game.
 For simplicity, let's do a single game with 2 people, but later scale to allow for n people for n rounds.
 """
 
+import logging
 import random as random
 import pandas as pd
 import datetime
@@ -42,14 +43,14 @@ def rock_paper_scissors(n_players=2, n_games=1):
         win_dict = dict(zip(range(0, n_players), [0] * n_players))
         for round in range(1, n_games+1):
             # first round
-            print("Round %s" % round)
+            logging.info("Round %s" % round)
             verdict = play_round(n_players)  # list of 1/0 for win/loss
             for key in win_dict:
                 win_dict[key] += verdict[key]
-            print("Win dict is %s" % win_dict)
+            logging.info("Win dict is %s" % win_dict)
         return win_dict
     except TypeError:
-        print("The number of players and number of rounds need to be integers. Try again")
+        logging.info("The number of players and number of rounds need to be integers. Try again")
 
 
 
@@ -62,7 +63,7 @@ def play_round(n_players):
         result = ['a' for _ in range(0,n_players)]
         for player in range(0, n_players):
             result[player] = random.choice(CHOICE_LIST)
-        print("The choices of this round are %s" % result)
+        logging.info("The choices of this round are %s" % result)
         verdict = round_verdict(result)  # returns an empty list of the round is a draw
 
     return verdict
@@ -118,11 +119,11 @@ def insert_results(game_result_dict, db_url, n_players, n_games):
     df_export = pd.DataFrame.from_dict(data_export)
     with psycopg2.connect(database=db_url) as conn:
         with conn.cursor() as cur:
-            print('creating schema if not exists')
+            logging.info('creating schema if not exists')
             cur.execute(query_create_schema)
-            print('creating table if not exists')
+            logging.info('creating table if not exists')
             cur.execute(query_create_table)
-        print('inserting game results to the table')
+        logging.info('inserting game results to the table')
         psql_insert_copy(table_name='game_1_results',
                          table_schema='sandbox',
                          conn=conn,
