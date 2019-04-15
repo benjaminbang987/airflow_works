@@ -29,5 +29,5 @@ pip install -r pkg_requirements.txt
     1. Unit-testing the functionality of the rock-paper-scissors game
     2. Validation test framework for result logs coming out from the game
 4. Create API connection for external data crawler
-
+5. [Definition of ETL](https://databricks.com/glossary/extract-transform-load)
 
