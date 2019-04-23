@@ -52,7 +52,6 @@ def checks_airflow_home_dir():
     Assumed default directory ($AIRFLOW_HOME) is used.
     If this is not existent, then function names AIRFLOW_HOME representing `~/airflow` directory for the user.
     """
-    import pdb; pdb.set_trace()
     if subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True
                         ).stdout.read().decode("utf-8").strip('\n'):
         af_home_dir = subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True
