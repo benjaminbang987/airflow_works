@@ -29,5 +29,7 @@ pip install -r pkg_requirements.txt
     1. Unit-testing the functionality of the rock-paper-scissors game
     2. Validation test framework for result logs coming out from the game
 4. Create API connection for external data crawler
-
+    1. Read https://dev.socrata.com/consumers/getting-started.html for starters on Socrata API.
+    2. Setup API for data from https://data.cms.gov/browse?q=Medicare%20Provider%20Utilization%20and%20Payment%20Data%3A%202015%20Part%20D%20Prescriber&sortBy=relevance (relevant to https://github.com/sfbrigade/datasci-open-payments)
+5. Read up [Definition of ETL](https://databricks.com/glossary/extract-transform-load)
 

@@ -53,14 +53,17 @@ def rock_paper_scissors(n_players=2, n_games=1):
         logging.info("The number of players and number of rounds need to be integers. Try again")
 
 
-
 def play_round(n_players):
     """
     Function to run a single round of rock_paper_scissors game. Returns a list of 1/0 for win/loss for each player.
     """
+    if n_players <= 1:
+        raise KeyError('The number of players needs to be greater than 1.')
+    if not isinstance(n_players, int):
+        raise KeyError('The number of players has to be an integer.')
     verdict = []
-    while verdict == []:
-        result = ['a' for _ in range(0,n_players)]
+    while not verdict:
+        result = ['a' for _ in range(0, n_players)]
         for player in range(0, n_players):
             result[player] = random.choice(CHOICE_LIST)
         logging.info("The choices of this round are %s" % result)
@@ -71,7 +74,7 @@ def play_round(n_players):
 
 def round_verdict(game_choice_result_list):
     """
-    Function to determine the verdict of a given round. Returns the list of verdict for a given list of choices.
+    Function to determine the verdict of a given round. Returns a list of verdict for a given list of choices.
     """
     if "r" in set(game_choice_result_list) and "p" in set(game_choice_result_list) and "s" in set(
             game_choice_result_list):
