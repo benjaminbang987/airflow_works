@@ -3,18 +3,18 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: helloworldservicetest
+  name: exampleservice
 spec:
   selector:
-    app: hello-world
+    app: myapp
   ports:
     - protocol: "TCP"
       # Port accessible inside cluster
-      port: 8080
+      port: 8081
       # Port to forward to inside the pod
-      targetPort: 80
+      targetPort: 8080
       # Port accessible outside cluster
-      nodePort: 30001
+      nodePort: 30002
   type: LoadBalancer
  
  
@@ -23,16 +23,16 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: hello-world
+  name: myappdeployment
 spec:
   replicas: 5
   template:
     metadata:
       labels:
-        app: hello-world
+        app: myapp
     spec:
       containers:
-        - name: hello-world
-          image: tutum/hello-world
+        - name: myapp
+          image: benjaminbang/exampleapp:v1.0.0
           ports:
-            - containerPort: 80
+            - containerPort: 8080
