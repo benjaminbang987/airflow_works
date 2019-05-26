@@ -55,14 +55,15 @@ def checks_airflow_home_dir():
     if subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True
                         ).stdout.read().decode("utf-8").strip('\n'):
         af_home_dir = subprocess.Popen('echo $AIRFLOW_HOME', stdout=subprocess.PIPE, shell=True
-                                        ).stdout.read().decode("utf-8").strip('\n')
-    elif os.path.exists(os.path.expanduser('~/airflow')):
-        subprocess.run('export AIRFLOW_HOME=~/airflow')
-        af_home_dir = os.path.expanduser('~/airflow')
+                                       ).stdout.read().decode("utf-8").strip('\n')
+    elif os.path.exists(os.path.expanduser('~/airflow/airflow_works')):
+        subprocess.run('export AIRFLOW_HOME=~/airflow/airflow_works')
+        af_home_dir = os.path.expanduser('~/airflow/airflow_works')
     else:
         logging.info("Creating an airflow folder in ~/ repository.")
         os.mkdir(os.path.expanduser('~/airflow'))
-        af_home_dir = os.path.expanduser('~/airflow')
+        os.mkdir(os.path.expanduser('~/airflow/airflow_works'))
+        af_home_dir = os.path.expanduser('~/airflow/airflow_works')
     return af_home_dir
 
 

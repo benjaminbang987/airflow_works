@@ -1,19 +1,39 @@
 # airflow_works
 
 ## Workspace for creating a sample DAG using several tasks
-## (As of 2019 April 01)
+## (2019 April 01 ~)
 
-#### Packages
+#### Installation Requirements
 
-To peg the pyenv and python setup, please create/activate a virtual environment for this repo as directed below:
+Creating a virtual environment for this repo, as well as downloading the initial package requirements can be done via the following code:
+  
 ```
-pyenv virtualenv 3.6.2 airflow_works
-pyenv activate airflow_works
+source initial_config.sh
 ```
-Now that the virtual environment is setup, it's time to install package dependencies.
+
+Next, run this whenever you are in this repo to reset the Airflow constants and also setup 
+a local postgresql database if necessary:
+
 ```
-pip install -r pkg_requirements.txt
+source config.sh
 ```
+
+#### Exact steps to emulate locally running Airflow
+
+- Follow through on the installation requirements set above.
+- Need to initialize database. Run the following to initialize the database:
+    ```
+    psql postgres
+    ```
+- Open a terminal window with the correct pyenv, run 
+    ```
+    airflow webserver -p 8080
+    ```
+- Open another terminal window with correct the correct pyenv (will be automated), run 
+    ```
+    airflow scheduler
+    ```
+-  
 
 #### Steps taken for this project: 
 
@@ -32,4 +52,9 @@ pip install -r pkg_requirements.txt
     1. Read https://dev.socrata.com/consumers/getting-started.html for starters on Socrata API.
     2. Setup API for data from https://data.cms.gov/browse?q=Medicare%20Provider%20Utilization%20and%20Payment%20Data%3A%202015%20Part%20D%20Prescriber&sortBy=relevance (relevant to https://github.com/sfbrigade/datasci-open-payments)
 5. Read up [Definition of ETL](https://databricks.com/glossary/extract-transform-load)
+
+
+#### Useful Articles on Airflow
+
+Vineet Goel (Robinhood): (Why Robinhood Uses Airflow)[https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8]
 
