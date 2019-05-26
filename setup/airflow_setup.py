@@ -58,18 +58,18 @@ def checks_airflow_home_dir():
                                        ).stdout.read().decode("utf-8").strip('\n')
     elif os.path.exists(os.path.expanduser('~/airflow/airflow_works')):
         subprocess.run('export AIRFLOW_HOME=~/airflow/airflow_works')
+        logging.info("Initializing with the existing ~airflow/airflow_works as the AIRFLOW_HOME directory")
         af_home_dir = os.path.expanduser('~/airflow/airflow_works')
     else:
-        logging.info("Creating an airflow folder in ~/ repository.")
-        os.mkdir(os.path.expanduser('~/airflow'))
-        os.mkdir(os.path.expanduser('~/airflow/airflow_works'))
-        af_home_dir = os.path.expanduser('~/airflow/airflow_works')
+        af_home_dir = None
+        AssertionError("Go back to the README and finish the Installation Requirements steps")
     return af_home_dir
 
 
 def symbolic_link(src_path, trg_path):
     """
     Sets up a symbolic link between this DAG + any dependencies and the local directory for Airflow DAGs
+    TODO: Create an iterative search throughout a given directory
     """
     if not os.path.exists(src_path):
         raise ValueError('Source path {src_path} does not exist'.format(src_path=src_path))
@@ -83,5 +83,6 @@ def symbolic_link(src_path, trg_path):
 
 if __name__ == "__main__":
     home_dir = checks_airflow_home_dir()
-    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow_setup.py", home_dir + "/dags/airflow_setup.py")
-    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/tasks/", home_dir + "/dags/tasks")
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow_setup.py", home_dir + "airflow_setup.py")
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/tasks/", home_dir + "dags/tasks")
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow.cfg", home_dir + "airflow.cfg")

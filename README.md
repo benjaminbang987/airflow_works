@@ -11,20 +11,34 @@ Creating a virtual environment for this repo, as well as downloading the initial
 source initial_config.sh
 ```
 
+Next, we need to initialize the database. Run the following to initialize the database:
+    ```
+    psql postgres
+    ```
+Once you are in the SQL shell, run
+```
+CREATE DATABASE airflow_works;
+```
+Run `\l` to check that the database is created.  
+
 Next, run this whenever you are in this repo to reset the Airflow constants:
 
 ```
 source config.sh
 ```
 
-#### Exact steps to emulate locally running Airflow
+As a validation setp, run the terminal window run `echo $AIRFLOW_WORKS_DBURL` to see if the Airflow config is linked to the correct database. 
+The name of the database should be equal to the name after the `postgres://localhost:port_number/`.
+Run `psql $AIRFLOW_WORKS_DBURL` to see if you can psql into the database. If you can, `\q` out from the
+sql shell and you are ready to roll.
+
+Lastly, run `python3 airflow_setup.py` to create symlinks.
+
+#### Exact steps to locally run Airflow
 
 - Follow through on the installation requirements set above.
-- Need to initialize database. Run the following to initialize the database:
-    ```
-    psql postgres
-    ```
-- Open a terminal window with the correct pyenv, run 
+- After the database is correctly setup and linked to the Airflow via a config, 
+open a terminal window with the correct pyenv, run 
     ```
     airflow webserver -p 8080
     ```

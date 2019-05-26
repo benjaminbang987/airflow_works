@@ -1,3 +1,4 @@
+apache-airflow
 ipykernel==4.8.2
 ipython==4.1.2
 jupyter==1.0.0
