@@ -11,8 +11,7 @@ Creating a virtual environment for this repo, as well as downloading the initial
 source initial_config.sh
 ```
 
-Next, run this whenever you are in this repo to reset the Airflow constants and also setup 
-a local postgresql database if necessary:
+Next, run this whenever you are in this repo to reset the Airflow constants:
 
 ```
 source config.sh
@@ -33,7 +32,7 @@ source config.sh
     ```
     airflow scheduler
     ```
--  
+- 
 
 #### Steps taken for this project: 
 
@@ -58,3 +57,4 @@ source config.sh
 
 Vineet Goel (Robinhood): (Why Robinhood Uses Airflow)[https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8]
 
+()Useful Quora for .bashrc/.bash_profile)[https://www.quora.com/What-is-bash_profile-and-what-is-its-use]
