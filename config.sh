@@ -6,7 +6,7 @@ export AIRFLOW_HOME=~/airflow/airflow_works/
 # creating airflow_works sub-folder's plugins and dags
 mkdir -p ~/airflow/airflow_works/plugins
 mkdir -p ~/airflow/airflow_works/dags
-AIRFLOW_WORKS_DBURL=${AIRFLOW_WORKS_DBURL:-"postgres+psycopg2://localhost:5432/airflow_works"}  # Don't overwrite an existing value
+AIRFLOW_WORKS_DBURL=${AIRFLOW_WORKS_DBURL:-"postgres://localhost:5432/airflow_works"}  # Don't overwrite an existing value
 export AIRFLOW_WORKS_POSTGRES_DBURL=${AIRFLOW_WORKS_DBURL}
 
 # Linking this repo's airflow.cfg to the local airflow directory
