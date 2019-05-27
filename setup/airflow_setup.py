@@ -17,7 +17,6 @@ import os
 import subprocess
 from tasks import game_1 as g1
 
-
 START_DATE = datetime(2019, 4, 5, 10, 0, 0)
 SCHEDULE_INTERVAL = "0 10 * * *"
 
@@ -82,6 +81,6 @@ def symbolic_link(src_path, trg_path):
 
 if __name__ == "__main__":
     home_dir = checks_airflow_home_dir()
-    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow_setup.py", home_dir + "airflow_setup.py")
+    symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow_setup.py", home_dir + "dags/airflow_setup.py")
     symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/tasks/", home_dir + "dags/tasks")
     symbolic_link(os.path.dirname(os.path.realpath(__file__)) + "/airflow.cfg", home_dir + "airflow.cfg")
