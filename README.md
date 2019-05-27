@@ -1,50 +1,19 @@
 # airflow_works
 
 ## Workspace for creating a sample DAG using several tasks
-## (2019 April 01 ~)
+## (As of 2019 April 01)
 
-#### Installation Requirements
+#### Packages
 
-Creating a virtual environment for this repo, as well as downloading the initial package requirements can be done via the following code:
-  
+To peg the pyenv and python setup, please create/activate a virtual environment for this repo as directed below:
 ```
-source initial_config.sh
+pyenv virtualenv 3.6.2 airflow_works
+pyenv activate airflow_works
 ```
-
-Next, we need to initialize the database. Run the following to initialize the database:
-    ```
-    psql postgres
-    ```
-Once you are in the SQL shell, run
+Now that the virtual environment is setup, it's time to install package dependencies.
 ```
-CREATE DATABASE airflow_works;
+pip install -r pkg_requirements.txt
 ```
-Run `\l` to check that the database is created.  
-
-Next, run this whenever you are in this repo to reset the Airflow constants:
-
-```
-source config.sh
-```
-
-As a validation setp, run the terminal window run `echo $AIRFLOW_WORKS_DBURL` to see if the Airflow config is linked to the correct database. 
-The name of the database should be equal to the name after the `postgres://localhost:port_number/`.
-Run `psql $AIRFLOW_WORKS_DBURL` to see if you can psql into the database. If you can, `\q` out from the
-sql shell and you are ready to roll.
-
-#### Exact steps to locally run Airflow
-
-- Follow through on the installation requirements set above.
-- After the database is correctly setup and linked to the Airflow via a config, 
-open a terminal window with the correct pyenv, run 
-    ```
-    airflow webserver -p 8080
-    ```
-- Open another terminal window with correct the correct pyenv (will be automated), run 
-    ```
-    airflow scheduler
-    ```
-- 
 
 #### Steps taken for this project: 
 
@@ -64,9 +33,3 @@ open a terminal window with the correct pyenv, run
     2. Setup API for data from https://data.cms.gov/browse?q=Medicare%20Provider%20Utilization%20and%20Payment%20Data%3A%202015%20Part%20D%20Prescriber&sortBy=relevance (relevant to https://github.com/sfbrigade/datasci-open-payments)
 5. Read up [Definition of ETL](https://databricks.com/glossary/extract-transform-load)
 
-
-#### Useful Articles on Airflow
-
-Vineet Goel (Robinhood): (Why Robinhood Uses Airflow)[https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8]
-
-()Useful Quora for .bashrc/.bash_profile)[https://www.quora.com/What-is-bash_profile-and-what-is-its-use]

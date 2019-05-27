@@ -40,6 +40,3 @@ tasks/__pycache__/
 setup/__pycache__/
 __pycache__/
 *.cache/*
-
-# Other Files
-setup/airflow.cfg
