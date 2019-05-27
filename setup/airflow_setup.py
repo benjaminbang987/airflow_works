@@ -69,7 +69,6 @@ def checks_airflow_home_dir():
 def symbolic_link(src_path, trg_path):
     """
     Sets up a symbolic link between this DAG + any dependencies and the local directory for Airflow DAGs
-    TODO: Create an iterative search throughout a given directory
     """
     if not os.path.exists(src_path):
         raise ValueError('Source path {src_path} does not exist'.format(src_path=src_path))
