@@ -32,8 +32,6 @@ The name of the database should be equal to the name after the `postgres://local
 Run `psql $AIRFLOW_WORKS_DBURL` to see if you can psql into the database. If you can, `\q` out from the
 sql shell and you are ready to roll.
 
-Lastly, run `python3 airflow_setup.py` to create symlinks.
-
 #### Exact steps to locally run Airflow
 
 - Follow through on the installation requirements set above.
