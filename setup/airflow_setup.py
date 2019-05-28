@@ -10,12 +10,13 @@ All rights reserved to the github repo above.
 
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.sensors import HttpSensor
 from datetime import datetime, timedelta
 from airflow import models as af_models
 import logging
 import os
 import subprocess
-from tasks import game_1 as g1
+from tasks import game_1, cms_data_pull as g1, cdp
 
 START_DATE = datetime(2019, 4, 5, 10, 0, 0)
 SCHEDULE_INTERVAL = "0 10 * * *"
@@ -37,13 +38,46 @@ t1 = BashOperator(
     bash_command='date',
     dag=dag_game_1)
 
-t4 = PythonOperator(
+t2 = PythonOperator(
     task_id='run_game_1_and_store_results',
     python_callable=g1.game_1_main,
     op_kwargs={"database_url": "airflow_works",
                "n_players": 3,
                "n_games": 100},
     dag=dag_game_1)
+
+# p0 = PythonOperator(
+#     task_id='CMS Data Pull',
+#     python_callable=cdp.run_cms_data_pull,
+#     op_kwargs={"website_link": "data.cms.gov",
+#                "token": None,
+#                "dataset_identifier": "xbte-dn4t",
+#                "crawl_limit": 5000,
+#                "db_url": "airflow_works",
+#                "schema": "sandbox",
+#                "table_name": "cms_drug_file"},
+#     dag=dag_game_1)
+
+s1 = HttpSensor(
+    task_id='http_sensor_check',
+    http_conn_id='http_default',
+    endpoint='',
+    request_params={},
+    response_check=lambda response: True if "Google" in response.text else False,
+    dag=dag_game_1,
+)
+
+s2 = HttpSensor(
+    task_id='cms_http_sensor_2',
+    http_conn_id='cms_gov_http_id',
+    endpoint='',
+    request_params={},
+    dag=dag_game_1,
+)
+
+
+t2.set_upstream(t1)
+t1.set_upstream(s1)
 
 
 def checks_airflow_home_dir():
