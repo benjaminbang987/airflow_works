@@ -16,7 +16,8 @@ from airflow import models as af_models
 import logging
 import os
 import subprocess
-from tasks import game_1, cms_data_pull as g1, cdp
+from tasks import game_1 as g1
+from tasks import cms_data_pull as cdp
 
 START_DATE = datetime(2019, 4, 5, 10, 0, 0)
 SCHEDULE_INTERVAL = "0 10 * * *"
@@ -46,17 +47,18 @@ t2 = PythonOperator(
                "n_games": 100},
     dag=dag_game_1)
 
-# p0 = PythonOperator(
-#     task_id='CMS Data Pull',
-#     python_callable=cdp.run_cms_data_pull,
-#     op_kwargs={"website_link": "data.cms.gov",
-#                "token": None,
-#                "dataset_identifier": "xbte-dn4t",
-#                "crawl_limit": 5000,
-#                "db_url": "airflow_works",
-#                "schema": "sandbox",
-#                "table_name": "cms_drug_file"},
-#     dag=dag_game_1)
+p0 = PythonOperator(
+    task_id='cms_data_pull',
+    python_callable=cdp.run_cms_data_pull,
+    op_kwargs={"website_link": "data.cms.gov",
+               "token": None,
+               "dataset_identifier": "xbte-dn4t",
+               "crawl_limit": 5000,
+               "db_url_full": "postgres://localhost:5432/airflow_works",
+               "db_url": "airflow_works",
+               "schema": "sandbox",
+               "table_name": "cms_drug_file"},
+    dag=dag_game_1)
 
 s1 = HttpSensor(
     task_id='http_sensor_check',
@@ -68,7 +70,7 @@ s1 = HttpSensor(
 )
 
 s2 = HttpSensor(
-    task_id='cms_http_sensor_2',
+    task_id='cms_http_sensor',
     http_conn_id='cms_gov_http_id',
     endpoint='',
     request_params={},
