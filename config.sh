@@ -11,16 +11,16 @@ export AIRFLOW_WORKS_POSTGRES_DBURL=${AIRFLOW_WORKS_DBURL}
 
 # Linking this repo's airflow.cfg to the local airflow directory
 CURRENT_DIR=`pwd`
-LOCAL_AIRFLOW_CONFIG_PATH="$CURRENT_DIR/setup/airflow.cfg"
+LOCAL_AIRFLOW_CONFIG_PATH="$CURRENT_DIR/beniflow/dags/airflow.cfg"
 # 1. Check if a local config file (not link) exists
 # 2. If no local config create a link
 if [ -e $LOCAL_AIRFLOW_CONFIG_PATH ]; then
     echo "Local custom Airflow config already exists."
 else
-    ln -s $CURRENT_DIR/setup/airflow.cfg.template $LOCAL_AIRFLOW_CONFIG_PATH
-    echo "Linked airflow_works/setup/airflow.cfg to clover_config/dev/airflow.cfg.template"
+    ln -s $CURRENT_DIR/beniflow/dags/airflow.cfg.template $LOCAL_AIRFLOW_CONFIG_PATH
+    echo "Linked airflow_works/beniflow/dags/airflow.cfg to clover_config/dev/airflow.cfg.template"
 fi
-ln -sf $CURRENT_DIR/setup/airflow.cfg ~/airflow/airflow_works/airflow.cfg
+ln -sf $CURRENT_DIR/beniflow/dags/airflow.cfg ~/airflow/airflow_works/airflow.cfg
 
 PYTHONPATH=$CURRENT_DIR airflow initdb
-python3 setup/airflow_setup.py # Creates symlinks between the files
+python3 beniflow/dags/airflow_setup.py # Creates symlinks between the files

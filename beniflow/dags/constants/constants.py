@@ -1,0 +1,1 @@
+LOCAL_DB_URL="postgres://localhost:5432/airflow_works"

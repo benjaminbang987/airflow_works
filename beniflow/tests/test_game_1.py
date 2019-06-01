@@ -2,7 +2,7 @@
 Unit tests for game_1.py
 """
 
-from setup.tasks import game_1 as g1
+from dags.tasks import game_1 as g1
 import pytest
 
 

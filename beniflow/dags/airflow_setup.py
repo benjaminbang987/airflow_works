@@ -18,6 +18,8 @@ import os
 import subprocess
 from tasks import game_1 as g1
 from tasks import cms_data_pull as cdp
+from constants import constants
+
 
 START_DATE = datetime(2019, 4, 5, 10, 0, 0)
 SCHEDULE_INTERVAL = "0 10 * * *"
@@ -54,7 +56,7 @@ p0 = PythonOperator(
                "token": None,
                "dataset_identifier": "xbte-dn4t",
                "crawl_limit": 5000,
-               "db_url_full": "postgres://localhost:5432/airflow_works",
+               "db_url_full": constants.LOCAL_DB_URL,
                "db_url": "airflow_works",
                "schema": "sandbox",
                "table_name": "cms_drug_file"},
