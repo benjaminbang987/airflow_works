@@ -14,7 +14,7 @@ from io import StringIO
 
 def psql_insert_copy(table_schema, table_name, conn, keys, data_iter):
     # gets a DBAPI connection that can provide a cursor
-    # example from https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html#io-sql-method
+    # code from https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html#io-sql-method
     with conn.cursor() as cur:
         s_buf = StringIO()
         writer = csv.writer(s_buf)
@@ -140,4 +140,3 @@ def game_1_main(database_url, n_players=2, n_games=1):
     """
     win_dict = rock_paper_scissors(n_players, n_games)
     insert_results(win_dict, database_url, n_players, n_games)
-
