@@ -140,3 +140,7 @@ def game_1_main(database_url, n_players=2, n_games=1):
     """
     win_dict = rock_paper_scissors(n_players, n_games)
     insert_results(win_dict, database_url, n_players, n_games)
+
+
+if __name__ == "__main__":
+    game_1_main()
