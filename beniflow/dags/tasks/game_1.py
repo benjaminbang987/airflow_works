@@ -8,28 +8,7 @@ import random as random
 import pandas as pd
 import datetime
 import psycopg2
-import csv
-from io import StringIO
-
-
-def psql_insert_copy(table_schema, table_name, conn, keys, data_iter):
-    # gets a DBAPI connection that can provide a cursor
-    # code from https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html#io-sql-method
-    with conn.cursor() as cur:
-        s_buf = StringIO()
-        writer = csv.writer(s_buf)
-        writer.writerows(data_iter)
-        s_buf.seek(0)
-
-        columns = ', '.join('"{}"'.format(k) for k in keys)
-        if table_schema:
-            _table_name = '{}.{}'.format(table_schema, table_name)
-        else:
-            _table_name = table_name
-
-        sql = 'COPY {} ({}) FROM STDIN WITH CSV'.format(
-            _table_name, columns)
-        cur.copy_expert(sql=sql, file=s_buf)
+from beniflow.dags.beniflow_utils import utils
 
 
 CHOICE_LIST = ["r", "p", "s"]
@@ -92,7 +71,7 @@ def round_verdict(game_choice_result_list):
         return []
 
 
-def insert_results(game_result_dict, db_url, n_players, n_games):
+def insert_results(game_result_dict, db_url, db_url_full, n_players, n_games):
     """
     Function to insert the game_result_dict into the database
     """
@@ -127,19 +106,20 @@ def insert_results(game_result_dict, db_url, n_players, n_games):
             logging.info('creating table if not exists')
             cur.execute(query_create_table)
         logging.info('inserting game results to the table')
-        psql_insert_copy(table_name='game_1_results',
-                         table_schema='sandbox',
-                         conn=conn,
-                         keys=df_export.keys(),
-                         data_iter=df_export.values)
+        utils.pd_to_sql_wrapper(table_name='game_1_results',
+                                schema_name='sandbox',
+                                pandas_df=df_export,
+                                db_url=db_url,
+                                db_url_full=db_url_full
+                                )
 
 
-def game_1_main(database_url, n_players=2, n_games=1):
+def game_1_main(db_url, db_url_full, n_players=2, n_games=1):
     """
     Main function that plays the game and stores the results in the specified postgresql database
     """
     win_dict = rock_paper_scissors(n_players, n_games)
-    insert_results(win_dict, database_url, n_players, n_games)
+    insert_results(win_dict, db_url, db_url_full, n_players, n_games)
 
 
 if __name__ == "__main__":

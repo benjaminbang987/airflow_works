@@ -3,10 +3,13 @@ import pandas as pd
 import numpy as np
 import abc
 import attr
+import sqlalchemy as sa
+import psycopg2
+from beniflow.dags.beniflow_utils import utils
 
 
 @attr.s(frozen=True)
-class BaseProvider(object):
+class BaseProvider(abc.ABC):
     """ Base Provider class """
 
     first_name = attr.ib()
