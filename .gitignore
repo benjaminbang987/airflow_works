@@ -42,4 +42,5 @@ __pycache__/
 *.cache/*
 
 # Other Files
-setup/airflow.cfg
+beniflow/dags/airflow.cfg
+beniflow.egg-info

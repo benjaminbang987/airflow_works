@@ -2,7 +2,8 @@
 
 import pandas as pd
 from sodapy import Socrata
-from beniflow_utils import utils
+from beniflow.dags.beniflow_utils import utils
+
 
 def crawl_website_socrata(website_link, dataset_identifier, crawl_limit, token=None):
     """
@@ -25,9 +26,6 @@ def crawl_website_socrata(website_link, dataset_identifier, crawl_limit, token=N
     results_df = pd.DataFrame.from_records(results)
 
     return results_df
-
-
-
 
 
 def run_cms_data_pull(website_link, dataset_identifier, crawl_limit, db_url, db_url_full,
