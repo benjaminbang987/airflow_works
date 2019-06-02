@@ -11,4 +11,4 @@ pyenv virtualenv 3.6.2 airflow_works
 pyenv activate airflow_works
 pyenv local airflow_works # this takes care of the local fixation
 pip install -r requirements.txt
-
+pip install -e . # creating setuptools absolute reference in the pyenv

@@ -1,23 +1,21 @@
-""" Utilities file for general functions """
+""" Utilities file for beniflow project """
 
-from sqlalchemy import create_engine
+import logging
+import os
 import psycopg2
 import pandas as pd
-import logging
 import tempfile
-import os
+from sqlalchemy import create_engine
 
 
-def sql_to_pd_wrapper(table_name, schema_name, db_url):
+def pd_from_sql_wrapper(table_name, schema_name, db_url):
     """
-    Wrapper function that takes in table_name, schema_name, db_url and outputs a pandas dataframe
+    Wrapper function that takes in table_name, schema_name, db_url and outputs a pandas DataFrame
     """
     with psycopg2.connect(database=db_url) as conn:
         with tempfile.NamedTemporaryFile() as tmpfile:
             query = """
-            select
-                *
-            from {schema_name}.{table_name}
+            select * from {schema_name}.{table_name}
             """.format(
                 schema_name=schema_name,
                 table_name=table_name)
@@ -31,9 +29,7 @@ def sql_to_pd_wrapper(table_name, schema_name, db_url):
             tmpfile.seek(0)
             table_df = pd.read_csv(tmpfile)
 
-
-
-
+    return table_df
 
 
 def pd_to_sql_wrapper(table_name, schema_name, pandas_df, db_url, db_url_full):

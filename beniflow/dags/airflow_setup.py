@@ -4,7 +4,6 @@ Setup file for airflow essentials. Package import, database import.
 
 Code that goes along with the Airflow tutorial located at:
 https://github.com/apache/airflow/blob/master/airflow/example_dags/tutorial.py
-All rights reserved to the github repo above.
 
 """
 
@@ -16,16 +15,16 @@ from airflow import models as af_models
 import logging
 import os
 import subprocess
-from tasks import game_1 as g1
-from tasks import cms_data_pull as cdp
-from constants import constants
+from beniflow.dags.tasks import game_1 as g1
+from beniflow.dags.tasks import cms_data_pull as cdp
+from beniflow.dags.constants import constants
 
 
 START_DATE = datetime(2019, 4, 5, 10, 0, 0)
 SCHEDULE_INTERVAL = "0 10 * * *"
 
 dag_game_1 = af_models.DAG(
-    dag_id="rock_paper_scissors",
+    dag_id="Beniflow",
     default_args={"notification_handlers": None,
                   "execution_timeout": timedelta(hours=2),
                   "retries": 1},
@@ -44,12 +43,14 @@ t1 = BashOperator(
 t2 = PythonOperator(
     task_id='run_game_1_and_store_results',
     python_callable=g1.game_1_main,
-    op_kwargs={"database_url": "airflow_works",
+    op_kwargs={"db_url": "airflow_works",
+               "db_url_full": constants.LOCAL_DB_URL,
                "n_players": 3,
                "n_games": 100},
     dag=dag_game_1)
 
 p0 = PythonOperator(
+    # pulls the data from https://data.cms.gov/Medicare-Part-D/Medicare-Provider-Utilization-and-Payment-Data-201/yvpj-pmj2
     task_id='cms_data_pull',
     python_callable=cdp.run_cms_data_pull,
     op_kwargs={"website_link": "data.cms.gov",
