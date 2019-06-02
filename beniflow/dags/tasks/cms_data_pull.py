@@ -2,12 +2,7 @@
 
 import pandas as pd
 from sodapy import Socrata
-from sqlalchemy import create_engine
-import psycopg2
-import logging
-import tempfile
-import os
-
+from beniflow_utils import utils
 
 def crawl_website_socrata(website_link, dataset_identifier, crawl_limit, token=None):
     """
@@ -32,31 +27,6 @@ def crawl_website_socrata(website_link, dataset_identifier, crawl_limit, token=N
     return results_df
 
 
-def pd_to_sql_wrapper(table_name, schema, pandas_df, db_url, db_url_full):
-    """
-    Wrapper function to speed up pandas.to_sql function
-    """
-    full_table_name = schema + "." + table_name
-    db_engine = create_engine(db_url_full)
-    with psycopg2.connect(database=db_url) as conn:
-        logging.info("Table name is ", table_name, " and the schema is ", schema)
-        logging.info(db_url)
-        logging.info(conn)
-        pandas_df.head(0).to_sql(
-            name=table_name,
-            schema=schema,
-            con=db_engine, if_exists='replace', index=False)
-        with tempfile.NamedTemporaryFile() as tmpfile:
-            file_dir = os.path.dirname(os.path.realpath(tmpfile.name)) + '/temp_df.csv'
-            pandas_df.to_csv(file_dir, index=False)
-            cur = conn.cursor()
-            f = open(file_dir, 'r')
-            logging.info("File directory is {}{}".format(tmpfile, '/temp_df.csv'))
-            cur.execute("Truncate {} Cascade;".format(full_table_name))
-            logging.info("Truncated {}".format(full_table_name))
-            cur.copy_expert("Copy {} from STDIN CSV HEADER QUOTE '\"'".format(full_table_name), f)
-            cur.execute("commit;")
-            logging.info("Loaded data into {}".format(full_table_name))
 
 
 
@@ -69,8 +39,8 @@ def run_cms_data_pull(website_link, dataset_identifier, crawl_limit, db_url, db_
                                        token=token,
                                        dataset_identifier=dataset_identifier,
                                        crawl_limit=crawl_limit)
-    pd_to_sql_wrapper(table_name,
-                      schema,
-                      results_df,
-                      db_url,
-                      db_url_full)
+    utils.pd_to_sql_wrapper(table_name,
+                            schema,
+                            results_df,
+                            db_url,
+                            db_url_full)
