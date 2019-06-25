@@ -27,7 +27,7 @@ Next, run this whenever you are in this repo to reset the Airflow constants:
 source config.sh
 ```
 
-As a validation setp, run the terminal window run `echo $AIRFLOW_WORKS_DBURL` to see if the Airflow config is linked to the correct database. 
+As a validation setup, run the terminal window run `echo $AIRFLOW_WORKS_DBURL` to see if the Airflow config is linked to the correct database.
 The name of the database should be equal to the name after the `postgres://localhost:port_number/`.
 Run `psql $AIRFLOW_WORKS_DBURL` to see if you can psql into the database. If you can, `\q` out from the
 sql shell and you are ready to roll.
@@ -44,7 +44,9 @@ open a terminal window with the correct pyenv, run
     ```
     airflow scheduler
     ```
-- 
+- For one of the tasks in Beniflow, I made it so that SensorOperator checks the `cms_gov_http_id`, which is `https://data.cms.gov`.
+ Open up the Airflow UI and add a new connection (under Admin, Connections). `cms_gov_http_id` is the conn id, conn_type is `HTTP`, host is the
+ website link. (*Notice that this is the same as the default HTTP SensorOperator hitting Google.com)
 
 #### Steps taken for this project: 
 
@@ -67,6 +69,7 @@ open a terminal window with the correct pyenv, run
 
 #### Useful Articles on Airflow
 
-Vineet Goel (Robinhood): (Why Robinhood Uses Airflow)[https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8]
-
-()Useful Quora for .bashrc/.bash_profile)[https://www.quora.com/What-is-bash_profile-and-what-is-its-use]
+* Vineet Goel (Robinhood): [Why Robinhood Uses Airflow](https://robinhood.engineering/why-robinhood-uses-airflow-aed13a9a90c8)
+* Celery [How Apache Airflow Distributes Jobs on Celery Workers](https://blog.sicara.com/using-airflow-with-celery-workers-54cb5212d405)
+* Understanding Airflow Clusters [Setting up an Apache Airflow Cluster](http://site.clairvoyantsoft.com/setting-apache-airflow-cluster/)
+* [Useful Quora for .bashrc/.bash_profile](https://www.quora.com/What-is-bash_profile-and-what-is-its-use)
