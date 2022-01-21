@@ -1,7 +1,7 @@
 apache-airflow
 git-pylint-commit-hook
 ipykernel==4.8.2
-ipython==4.1.2
+ipython==7.16.3
 jupyter==1.0.0
 matplotlib
 numpy==1.14.5
